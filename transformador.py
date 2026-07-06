@@ -6,19 +6,19 @@ def _remover_acentos(texto):
     return "".join(c for c in nfkd if not unicodedata.combining(c))
 
 
-def normalizar_nome(nome):
+def normal_nome(nome):
     if not nome:
         return ""
     return nome.strip().title()
 
 
-def normalizar_email(email):
+def normal_email(email):
     if not email:
         return ""
     return email.strip().lower()
 
 
-def normalizar_cidade(cidade):
+def normal_cidade(cidade):
     if not cidade:
         return ""
     return _remover_acentos(cidade.strip()).title()
@@ -27,10 +27,10 @@ def normalizar_cidade(cidade):
 def transformar_cliente(cliente):
     return {
         "id": cliente["id"],
-        "nome": normalizar_nome(cliente.get("nome", "")),
-        "email": normalizar_email(cliente.get("email", "")),
+        "nome": normal_nome(cliente.get("nome", "")),
+        "email": normal_email(cliente.get("email", "")),
         "idade": cliente["idade"],
-        "cidade": normalizar_cidade(cliente.get("cidade", "")),
+        "cidade": normal_cidade(cliente.get("cidade", "")),
         "data_cadastro": cliente.get("data_cadastro", "").strip(),
     }
 

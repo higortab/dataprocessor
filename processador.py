@@ -1,5 +1,4 @@
 def media_idade(clientes):
-    """Calcula a média de idade ignorando valores inválidos."""
     idades_validas = [c["idade"] for c in clientes if c["idade"] > 0]
     if not idades_validas:
         return None
@@ -7,7 +6,6 @@ def media_idade(clientes):
 
 
 def extremos_idade(clientes):
-    """Retorna (minimo, maximo) das idades válidas."""
     idades_validas = [c["idade"] for c in clientes if c["idade"] > 0]
     if not idades_validas:
         return None, None
