@@ -19,7 +19,6 @@ def _para_float(valor, padrao=None):
 
 def carregar_clientes(caminho):
     if not os.path.exists(caminho):
-        print(f"[ERRO] Arquivo não encontrado: {caminho}")
         return []
 
     clientes = []
@@ -39,7 +38,6 @@ def carregar_clientes(caminho):
 
 def carregar_transacoes(caminho):
     if not os.path.exists(caminho):
-        print(f"[ERRO] Arquivo não encontrado: {caminho}")
         return []
 
     transacoes = []
@@ -59,7 +57,6 @@ def carregar_transacoes(caminho):
 
 def carregar_config(caminho):
     if not os.path.exists(caminho):
-        print(f"[ERRO] Arquivo não encontrado: {caminho}")
         return {}
 
     with open(caminho, encoding="utf-8") as arquivo:

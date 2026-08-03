@@ -1,13 +1,13 @@
-from .leitor import carregar_clientes, carregar_transacoes, carregar_config
-from .validador import validar_cliente, validar_transacao, separar_registros
-from .transformador import transformar_clientes, transformar_transacoes
-from .processador import media_idade, total_aprovado
+from ..infra.arquivos import carregar_clientes, carregar_transacoes, carregar_config
+from ..core.validacao import validar_cliente, validar_transacao, separar_registros
+from ..core.transformador import transformar_clientes, transformar_transacoes
+from ..core.metricas import media_idade, total_aprovado
 
 
-def executar_pipeline(caminho_clientes, caminho_transacoes, caminho_config):
-    clientes_raw = carregar_clientes(caminho_clientes)
-    transacoes_raw = carregar_transacoes(caminho_transacoes)
-    config = carregar_config(caminho_config)
+def executar_processamento(app_config):
+    clientes_raw = carregar_clientes(app_config.caminho_clientes)
+    transacoes_raw = carregar_transacoes(app_config.caminho_transacoes)
+    config_negocio = carregar_config(app_config.caminho_config)
 
     clientes_validos, clientes_invalidos = separar_registros(
         clientes_raw, validar_cliente
@@ -18,7 +18,7 @@ def executar_pipeline(caminho_clientes, caminho_transacoes, caminho_config):
         transacoes_raw,
         validar_transacao,
         ids_clientes=ids_validos,
-        config=config,
+        config=config_negocio,
     )
 
     clientes = transformar_clientes(clientes_validos)

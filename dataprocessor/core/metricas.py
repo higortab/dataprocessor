@@ -28,3 +28,8 @@ def total_aprovado(transacoes):
         for t in transacoes
         if t["status"] == "aprovado" and t["valor"] > 0
     )
+
+def ticket_medio_aprovado(transacoes):
+    if not transacoes_aprovadas(transacoes):
+        return None
+    return sum(t["valor"] for t in transacoes_aprovadas(transacoes)) / len(transacoes_aprovadas(transacoes))
