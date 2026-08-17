@@ -1,5 +1,5 @@
 from dataprocessor.config import carregar_configuracao_padrao
-from dataprocessor.services.processamento_service import executar_processamento
+from dataprocessor.services.processamento import executar_processamento
 
 
 def main():
@@ -13,6 +13,17 @@ def main():
     print(f"Transações inválidas: {len(resultado['transacoes_invalidas'])}")
     print(f"Média de idade: {resultado['metricas']['media_idade']:.1f}")
     print(f"Total aprovado: R$ {resultado['metricas']['total_aprovado']:.2f}")
+    print("Ticket médio aprovado: "f"R$ {resultado['metricas']['ticket_medio_aprovado']:.2f}")
+    print()
+    print("Registros inválidos:")
+    for item in resultado["clientes_invalidos"]:
+        cliente = item["registro"]
+        erros = ", ".join(item["erros"])
+        print(f"  {cliente.identificacao}: {erros}")
+    for item in resultado["transacoes_invalidas"]:
+        transacao = item["registro"]
+        erros = ", ".join(item["erros"])
+        print(f"  {transacao.resumo}: {erros}")
 
 
 if __name__ == "__main__":

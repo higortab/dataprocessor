@@ -1,7 +1,7 @@
 from ..infra.arquivos import carregar_clientes, carregar_transacoes, carregar_config
-from ..core.validacao import validar_cliente, validar_transacao, separar_registros
+from ..core.validador import validar_cliente, validar_transacao, separar_registros
 from ..core.transformador import transformar_clientes, transformar_transacoes
-from ..core.metricas import media_idade, total_aprovado
+from ..core.metricas import media_idade, total_aprovado, ticket_medio_aprovado
 
 
 def executar_processamento(app_config):
@@ -12,7 +12,7 @@ def executar_processamento(app_config):
     clientes_validos, clientes_invalidos = separar_registros(
         clientes_raw, validar_cliente
     )
-    ids_validos = {c["id"] for c in clientes_validos}
+    ids_validos = {c.id for c in clientes_validos}
 
     transacoes_validas, transacoes_invalidas = separar_registros(
         transacoes_raw,
@@ -32,5 +32,6 @@ def executar_processamento(app_config):
         "metricas": {
             "media_idade": media_idade(clientes),
             "total_aprovado": total_aprovado(transacoes),
+            "ticket_medio_aprovado": ticket_medio_aprovado(transacoes),
         },
     }
