@@ -27,8 +27,3 @@ class Transacao:
     @property
     def esta_aprovada(self) -> bool:
         return self.status == "aprovado"
-
-    @property
-    def resumo(self) -> str:
-        valor = "sem valor" if self.valor is None else f"R$ {self.valor:.2f}"
-        return f"#{self.id} {valor} {self.status}"

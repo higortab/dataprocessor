@@ -1,1 +1,1 @@
-"""Acesso a arquivos e recursos externos."""
+"""Adaptadores para entrada e saída de dados."""

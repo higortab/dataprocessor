@@ -1,1 +1,1 @@
-"""Casos de uso e orquestração do pipeline."""
+"""Casos de uso da aplicação."""

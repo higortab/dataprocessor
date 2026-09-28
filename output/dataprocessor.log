@@ -1,0 +1,21 @@
+2026-09-28 13:53:02,163 INFO Iniciando processamento
+2026-09-28 13:53:02,164 ERROR Falha no processamento
+Traceback (most recent call last):
+  File "/home/higor-thiago/Documentos/fundamentos-python/dataprocessor/dataprocessor/main.py", line 32, in main
+    resultado = executar_processamento(fonte)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/higor-thiago/Documentos/fundamentos-python/dataprocessor/dataprocessor/services/processamento.py", line 9, in executar_processamento
+    clientes_raw = fonte.carregar_clientes()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/higor-thiago/Documentos/fundamentos-python/dataprocessor/dataprocessor/infra/fontes.py", line 26, in carregar_clientes
+    return carregar_clientes(self.caminho_clientes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/higor-thiago/Documentos/fundamentos-python/dataprocessor/dataprocessor/infra/arquivos.py", line 23, in carregar_clientes
+    with Path(caminho).open(encoding="utf-8", newline="") as arquivo:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'CAMINHO_CLIENTES'
+2026-09-28 13:57:15,953 INFO Iniciando processamento
+2026-09-28 13:57:15,959 INFO Processamento concluído: 2 clientes e 2 transações válidos

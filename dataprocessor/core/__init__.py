@@ -1,1 +1,1 @@
-"""Regras puras de negócio do DataProcessor."""
+"""Regras e tipos do domínio."""

@@ -1,69 +1,56 @@
 import csv
 import json
-import os
+from pathlib import Path
 
 from ..core.entidades import Cliente, Transacao
 
 
-def _para_int(valor, padrao=None):
+def _para_int(valor: str, padrao: int | None = None) -> int | None:
     try:
         return int(valor)
-    except (ValueError, TypeError):
+    except (TypeError, ValueError):
         return padrao
 
 
-def _para_float(valor, padrao=None):
+def _para_float(valor: str, padrao: float | None = None) -> float | None:
     try:
         return float(valor)
-    except (ValueError, TypeError):
+    except (TypeError, ValueError):
         return padrao
 
 
-def carregar_clientes(caminho):
-    if not os.path.exists(caminho):
-        print(f"[ERRO] Arquivo não encontrado: {caminho}")
-        return []
-
-    clientes = []
-    with open(caminho, encoding="utf-8") as arquivo:
+def carregar_clientes(caminho: str | Path) -> list[Cliente]:
+    with Path(caminho).open(encoding="utf-8", newline="") as arquivo:
         leitor = csv.DictReader(arquivo)
-        for linha in leitor:
-            cliente = Cliente(
-                id=_para_int(linha["id"]),
-                nome=linha["nome"].strip(),
-                email=linha["email"].strip(),
-                idade=_para_int(linha["idade"]),
-                cidade=linha["cidade"].strip(),
-                data_cadastro=linha["data_cadastro"].strip(),
+        return [
+            Cliente(
+                id=_para_int(linha.get("id", "")),
+                nome=linha.get("nome", "").strip(),
+                email=linha.get("email", "").strip(),
+                idade=_para_int(linha.get("idade", "")),
+                cidade=linha.get("cidade", "").strip(),
+                data_cadastro=linha.get("data_cadastro", "").strip(),
             )
-            clientes.append(cliente)
-    return clientes
+            for linha in leitor
+        ]
 
 
-def carregar_transacoes(caminho):
-    if not os.path.exists(caminho):
-        print(f"[ERRO] Arquivo não encontrado: {caminho}")
-        return []
-
-    transacoes = []
-    with open(caminho, encoding="utf-8") as arquivo:
+def carregar_transacoes(caminho: str | Path) -> list[Transacao]:
+    with Path(caminho).open(encoding="utf-8", newline="") as arquivo:
         leitor = csv.DictReader(arquivo)
-        for linha in leitor:
-            transacao = Transacao(
-                id=_para_int(linha["id"]),
-                cliente_id=_para_int(linha["cliente_id"]),
-                valor=_para_float(linha["valor"]),
-                categoria=linha["categoria"].strip(),
-                data=linha["data"].strip(),
-                status=linha["status"].strip(),
+        return [
+            Transacao(
+                id=_para_int(linha.get("id", "")),
+                cliente_id=_para_int(linha.get("cliente_id", "")),
+                valor=_para_float(linha.get("valor", "")),
+                categoria=linha.get("categoria", "").strip(),
+                data=linha.get("data", "").strip(),
+                status=linha.get("status", "").strip(),
             )
-            transacoes.append(transacao)
-    return transacoes
+            for linha in leitor
+        ]
 
 
-def carregar_config(caminho):
-    if not os.path.exists(caminho):
-        return {}
-
-    with open(caminho, encoding="utf-8") as arquivo:
+def carregar_config(caminho: str | Path) -> dict:
+    with Path(caminho).open(encoding="utf-8") as arquivo:
         return json.load(arquivo)
