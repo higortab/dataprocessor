@@ -1,4 +1,4 @@
-from dataprocessor.main import main
+from painel.main import main
 
 
 if __name__ == "__main__":
