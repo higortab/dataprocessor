@@ -1,30 +1,26 @@
-# DataProcessor CLI
+# Painel de Notas da Turma
 
-Projeto executável usado nas Aulas 12–18 de Fundamentos de Python.
+Projeto final de Fundamentos de Python. Lê alunos e notas em CSV, valida os registros sem interromper o processamento, calcula médias e situação e gera relatório em texto ou JSON.
 
-## Executar (CLI — Aula 15)
+A regra de negócio fica em `painel/core`, a leitura e a escrita de arquivos ficam em `painel/infra`, e a linha de comando só recebe os argumentos e chama o service.
+
+## Executar
 
 ```bash
-python -m dataprocessor \
-  --clientes data/clientes.csv \
-  --transacoes data/transacoes.csv \
+python -m painel \
+  --alunos data/alunos.csv \
+  --notas data/notas.csv \
   --config data/config.json \
-  --formato texto \
+  --formato json \
   --output output/
 ```
 
-## Menu interativo (Aulas 16–18)
-
-```bash
-python -m dataprocessor.interfaces.menu
-```
-
-- Aula 16: loop de menu e despacho de opções
-- Aula 17: estado de sessão, validação de entrada e tratamento de erros
-- Aula 18: `processar_caminhos()` isolada e testável (sem `input()`)
+`--formato` aceita `texto` ou `json`. A pasta `output/` é criada se não existir. O relatório sai em `output/relatorio.txt` ou `output/relatorio.json`, e o log em `output/painel.log`.
 
 ## Testar
 
 ```bash
 python -m unittest discover -s tests -v
 ```
+
+Os testes usam dados em memória ou arquivos temporários. Não dependem dos CSVs de `data/`.

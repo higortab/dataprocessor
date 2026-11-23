@@ -1,63 +1,44 @@
 import json
 import unittest
 
-from dataprocessor.core.entidades import Cliente, Transacao
-from dataprocessor.core.resultados import ResultadoProcessamento
-from dataprocessor.infra.relatorios import (
-    GeradorRelatorio,
-    RelatorioCsv,
-    RelatorioJson,
-    RelatorioTexto,
-)
-
-
-def resultado_exemplo():
-    return ResultadoProcessamento(
-        clientes=(
-            Cliente(1, "Joao Silva", "joao@email.com", 34, "Joinville", "2023-01-10"),
-        ),
-        transacoes=(
-            Transacao(1, 1, 150.50, "eletronicos", "2023-05-10", "aprovado"),
-        ),
-        clientes_invalidos=(),
-        transacoes_invalidas=(),
-        media_idade=34.0,
-        total_aprovado=150.50,
-    )
+from painel.core.entidades import Aluno, Configuracao, Nota
+from painel.core.resultados import ErroRegistro, ResultadoProcessamento
+from painel.infra.relatorios import RelatorioJson, RelatorioTexto, criar_gerador
 
 
 class RelatoriosTestCase(unittest.TestCase):
-    def test_gerador_relatorio_e_uma_abc(self):
-        self.assertTrue(issubclass(RelatorioTexto, GeradorRelatorio))
+    def setUp(self):
+        self.resultado = ResultadoProcessamento(
+            alunos=(Aluno("1001", "Ana Souza", "3A", (8.0, 6.0)),),
+            notas=(
+                Nota("1001", "Matemática", "P1", 8.0),
+                Nota("1001", "Português", "P1", 6.0),
+            ),
+            erros=(ErroRegistro("notas.csv", 3, "matrícula inexistente (1033)"),),
+            configuracao=Configuracao(6.0, 4.0, 10.0),
+            medias_disciplina={"Português": 6.0, "Matemática": 8.0},
+            notas_invalidas=1,
+        )
 
-        with self.assertRaises(TypeError):
-            GeradorRelatorio()
+    def test_texto_e_json_usam_o_mesmo_resultado(self):
+        texto = RelatorioTexto().render(self.resultado)
+        dados = json.loads(RelatorioJson().render(self.resultado))
 
-        class GeradorIncompleto(GeradorRelatorio):
-            pass
+        self.assertIn("Alunos processados: 1", texto)
+        self.assertIn("Ana Souza", texto)
+        self.assertIn("média 7.00  aprovado", texto)
+        self.assertNotIn("Física", texto)
+        self.assertIn("Matemática", texto)
+        self.assertIn("notas.csv:3  matrícula inexistente (1033)", texto)
+        self.assertEqual(dados["resumo"]["notas_validas"], 2)
+        self.assertEqual(dados["alunos"][0]["situacao"], "aprovado")
+        self.assertEqual(dados["alunos"][0]["media"], 7.0)
+        self.assertEqual(list(dados["medias_disciplina"]), ["Matemática", "Português"])
 
-        with self.assertRaises(TypeError):
-            GeradorIncompleto()
-
-    def test_relatorio_texto_exibe_metricas(self):
-        texto = RelatorioTexto().render(resultado_exemplo())
-
-        self.assertIn("Clientes válidos: 1", texto)
-        self.assertIn("Média de idade: 34.0", texto)
-        self.assertIn("Total aprovado: R$ 150.50", texto)
-
-    def test_relatorio_json_preserva_dados_do_resultado(self):
-        documento = json.loads(RelatorioJson().render(resultado_exemplo()))
-
-        self.assertEqual(documento["clientes"][0]["nome"], "Joao Silva")
-        self.assertEqual(documento["metricas"]["total_aprovado"], 150.50)
-
-    def test_relatorio_csv_produz_cabecalho_e_linhas(self):
-        csv = RelatorioCsv().render(resultado_exemplo())
-
-        self.assertIn("id,nome,email,idade,cidade,data_cadastro", csv)
-        self.assertIn("1,Joao Silva,joao@email.com,34,Joinville,2023-01-10", csv)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_fabrica_devolve_geradores_diferentes(self):
+        self.assertIsInstance(criar_gerador("texto"), RelatorioTexto)
+        self.assertIsInstance(criar_gerador("json"), RelatorioJson)
+        self.assertNotEqual(
+            criar_gerador("texto").render(self.resultado)[:1],
+            criar_gerador("json").render(self.resultado)[:1],
+        )

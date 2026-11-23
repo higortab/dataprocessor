@@ -1,5 +1,5 @@
 {
-  "categorias_validas": ["eletronicos", "roupas", "alimentacao", "livros"],
-  "status_validos": ["aprovado", "pendente", "recusado"],
-  "valor_minimo": 0
+  "media_aprovacao": 6.0,
+  "media_recuperacao": 4.0,
+  "nota_maxima": 10.0
 }
